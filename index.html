@@ -16,25 +16,54 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
             line-height: 1.6;
             color: #e8ebe8;
-            background-color: #2c3e50;
+            background-color: #232f3e;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255, 255, 255, 0.025) 60px, rgba(255, 255, 255, 0.025) 61px),
+                repeating-linear-gradient(60deg, transparent, transparent 60px, rgba(255, 255, 255, 0.025) 60px, rgba(255, 255, 255, 0.025) 61px),
+                repeating-linear-gradient(120deg, transparent, transparent 60px, rgba(255, 255, 255, 0.025) 60px, rgba(255, 255, 255, 0.025) 61px);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 0 32px;
+            text-align: center;
         }
 
         header {
-            padding: 64px 0 48px;
+            padding: 64px 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: rgba(35, 47, 62, 0.7);
+            backdrop-filter: blur(10px);
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 16px;
+            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo:hover {
+            opacity: 0.85;
         }
 
         .logo-mark {
@@ -50,83 +79,140 @@
             letter-spacing: 0.01em;
         }
 
-        main {
-            padding: 120px 0 140px;
+        /* Full-height hero section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
-        section {
-            margin-bottom: 120px;
+        /* Solid bar behind hero text */
+        .hero-background {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            height: 400px;
+            background: rgba(35, 47, 62, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: 56px;
+            font-size: 68px;
             font-weight: 600;
-            line-height: 1.15;
+            line-height: 1.2;
             color: #ffffff;
             margin-bottom: 0;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.03em;
+            text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
             max-width: 820px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .approach-section {
+            padding: 180px 0;
+            position: relative;
+        }
+
+        /* Animated dots for approach section */
+        .approach-section .dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .approach-section .dot:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+        .approach-section .dot:nth-child(2) { top: 25%; right: 15%; animation-delay: 0.5s; }
+        .approach-section .dot:nth-child(3) { bottom: 20%; left: 15%; animation-delay: 1s; }
+        .approach-section .dot:nth-child(4) { bottom: 30%; right: 12%; animation-delay: 1.5s; }
+        .approach-section .dot:nth-child(5) { top: 50%; left: 8%; animation-delay: 2s; }
+        .approach-section .dot:nth-child(6) { top: 40%; right: 10%; animation-delay: 2.5s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.3); }
         }
 
         .approach {
-            max-width: 680px;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .approach p {
-            font-size: 21px;
-            line-height: 1.65;
-            color: #c5cdd6;
-            margin-bottom: 24px;
+            font-size: 23px;
+            line-height: 1.7;
+            color: #bec8d4;
+            margin-bottom: 32px;
             font-weight: 400;
         }
 
+        .contact-section {
+            padding: 300px 0 200px;
+        }
+
         .contact {
-            padding: 64px 0 0;
-            max-width: 680px;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .contact p {
-            font-size: 21px;
-            line-height: 1.65;
-            color: #c5cdd6;
-            margin-bottom: 20px;
+            font-size: 23px;
+            line-height: 1.7;
+            color: #bec8d4;
+            margin-bottom: 28px;
             font-weight: 400;
         }
 
         .contact a {
             display: inline-block;
-            font-size: 21px;
+            font-size: 23px;
             font-weight: 400;
             color: #ffffff;
             text-decoration: none;
-            padding-bottom: 3px;
-            border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
-            transition: border-color 0.2s ease, color 0.2s ease;
+            padding-bottom: 4px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            transition: border-color 0.3s ease, transform 0.2s ease;
         }
 
         .contact a:hover {
             border-bottom-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-1px);
         }
 
         footer {
-            padding: 48px 0 64px;
-            text-align: left;
+            padding: 60px 0 80px;
+            text-align: center;
             font-size: 15px;
-            color: rgba(197, 205, 214, 0.5);
-            margin-top: 80px;
+            color: rgba(197, 205, 214, 0.3);
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 0 24px;
             }
 
-            header {
-                padding: 48px 0 32px;
+            .hero-background {
+                height: 300px;
             }
 
             .hero h1 {
-                font-size: 40px;
+                font-size: 42px;
                 letter-spacing: -0.02em;
             }
 
@@ -136,23 +222,19 @@
                 font-size: 19px;
             }
 
-            main {
-                padding: 80px 0 100px;
+            .approach-section,
+            .contact-section {
+                padding: 120px 0;
             }
 
-            section {
-                margin-bottom: 80px;
-            }
-
-            footer {
-                padding: 40px 0 48px;
-                margin-top: 60px;
+            .contact-section {
+                padding: 180px 0 120px;
             }
         }
 
         @media (max-width: 480px) {
             .hero h1 {
-                font-size: 32px;
+                font-size: 36px;
             }
 
             .approach p,
@@ -167,29 +249,44 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="logo.png" alt="AA Systems" class="logo-mark">
+                <img src="https://aa-systems.ai/logo.png" alt="AA Systems" class="logo-mark">
                 <span class="logo-text">AA Systems</span>
             </div>
         </div>
     </header>
 
-    <main>
+    <section class="hero-section">
+        <div class="hero-background"></div>
         <div class="container">
-            <section class="hero">
-                <h1>Turning your AI vision into systems that deliver results</h1>
-            </section>
+            <div class="hero">
+                <h1>Turning your AI vision<br>into systems<br>that deliver results</h1>
+            </div>
+        </div>
+    </section>
 
-            <section class="approach">
+    <section class="approach-section">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="container">
+            <div class="approach">
                 <p>You've heard what AI can do. We show you what it can do for your business.</p>
                 <p>We build intelligent systems that integrate with your operations. We strengthen what already works. Whatever isn't working, we transform.</p>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <section class="contact">
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact">
                 <p>Ready to explore how AI can work for your business?</p>
                 <a href="mailto:info@aa-systems.ai">info@aa-systems.ai</a>
-            </section>
+            </div>
         </div>
-    </main>
+    </section>
 
     <footer>
         <div class="container">
