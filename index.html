@@ -49,6 +49,10 @@
             --border-light: rgba(22, 39, 63, 0.08);
         }
 
+        [hidden] {
+            display: none !important;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -308,6 +312,10 @@
             margin-bottom: 32px;
         }
 
+        .contact-form-wrap {
+            margin-top: 40px;
+        }
+
         .contact-form {
             max-width: 480px;
             margin: 0 auto;
@@ -507,25 +515,28 @@
         <section class="contact" id="contact">
             <div class="container">
                 <h2 class="fr">Let's build something that ships.</h2>
-                <form class="contact-form" id="contact-form" novalidate>
-                    <div class="field">
-                        <label for="cf-name">Name</label>
-                        <input type="text" id="cf-name" name="name" autocomplete="name" maxlength="200" required>
-                    </div>
-                    <div class="field">
-                        <label for="cf-email">Email</label>
-                        <input type="email" id="cf-email" name="email" autocomplete="email" maxlength="320" required>
-                    </div>
-                    <div class="field">
-                        <label for="cf-message">Message</label>
-                        <textarea id="cf-message" name="message" rows="5" maxlength="5000" required></textarea>
-                    </div>
-                    <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAD4O18-mLO-gnW-p"></div>
-                    <button type="submit" class="btn btn-fill">Start a conversation</button>
-                    <p class="form-status" role="status" aria-live="polite"></p>
-                </form>
-                <p class="contact-fallback">Prefer email? <a href="mailto:hello@aa-systems.ai">hello@aa-systems.ai</a></p>
+                <button type="button" id="contact-reveal" class="btn btn-fill">Start a conversation</button>
+                <div class="contact-form-wrap" id="contact-form-wrap" hidden>
+                    <form class="contact-form" id="contact-form" novalidate>
+                        <div class="field">
+                            <label for="cf-name">Name</label>
+                            <input type="text" id="cf-name" name="name" autocomplete="name" maxlength="200" required>
+                        </div>
+                        <div class="field">
+                            <label for="cf-email">Email</label>
+                            <input type="email" id="cf-email" name="email" autocomplete="email" maxlength="320" required>
+                        </div>
+                        <div class="field">
+                            <label for="cf-message">Message</label>
+                            <textarea id="cf-message" name="message" rows="5" maxlength="5000" required></textarea>
+                        </div>
+                        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAD4O18-mLO-gnW-p"></div>
+                        <button type="submit" class="btn btn-fill">Send message</button>
+                        <p class="form-status" role="status" aria-live="polite"></p>
+                    </form>
+                    <p class="contact-fallback">Prefer email? <a href="mailto:hello@aa-systems.ai">hello@aa-systems.ai</a></p>
+                </div>
             </div>
         </section>
     </main>
@@ -541,9 +552,17 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
         const CONTACT_FUNCTION_URL = 'https://contactform-xafbvuh4jq-uc.a.run.app';
+        const revealBtn = document.getElementById('contact-reveal');
+        const formWrap = document.getElementById('contact-form-wrap');
         const form = document.getElementById('contact-form');
         const status = form.querySelector('.form-status');
         const submitBtn = form.querySelector('button[type="submit"]');
+
+        revealBtn.addEventListener('click', () => {
+            revealBtn.hidden = true;
+            formWrap.hidden = false;
+            form.querySelector('#cf-name').focus();
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
