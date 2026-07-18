@@ -308,6 +308,83 @@
             margin-bottom: 32px;
         }
 
+        .contact-form {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .contact-form .field {
+            margin-bottom: 20px;
+        }
+
+        .contact-form label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--navy);
+            background: transparent;
+            border: 1px solid rgba(22, 39, 63, 0.2);
+            border-radius: 6px;
+            resize: vertical;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--navy);
+        }
+
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        .cf-turnstile {
+            margin-bottom: 20px;
+        }
+
+        .contact-form .btn {
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-form .btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+            transform: none;
+        }
+
+        .form-status {
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--navy);
+        }
+
+        .contact-fallback {
+            max-width: 480px;
+            margin: 24px auto 0;
+            font-size: 14px;
+            color: var(--body-gray);
+        }
+
+        .contact-fallback a {
+            color: var(--navy);
+        }
+
         /* Footer */
         footer {
             background: var(--navy-footer);
@@ -430,7 +507,25 @@
         <section class="contact" id="contact">
             <div class="container">
                 <h2 class="fr">Let's build something that ships.</h2>
-                <a href="mailto:hello@aa-systems.ai" class="btn btn-fill">Start a conversation</a>
+                <form class="contact-form" id="contact-form" novalidate>
+                    <div class="field">
+                        <label for="cf-name">Name</label>
+                        <input type="text" id="cf-name" name="name" autocomplete="name" maxlength="200" required>
+                    </div>
+                    <div class="field">
+                        <label for="cf-email">Email</label>
+                        <input type="email" id="cf-email" name="email" autocomplete="email" maxlength="320" required>
+                    </div>
+                    <div class="field">
+                        <label for="cf-message">Message</label>
+                        <textarea id="cf-message" name="message" rows="5" maxlength="5000" required></textarea>
+                    </div>
+                    <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAD4O18-mLO-gnW-p"></div>
+                    <button type="submit" class="btn btn-fill">Start a conversation</button>
+                    <p class="form-status" role="status" aria-live="polite"></p>
+                </form>
+                <p class="contact-fallback">Prefer email? <a href="mailto:hello@aa-systems.ai">hello@aa-systems.ai</a></p>
             </div>
         </section>
     </main>
@@ -442,5 +537,52 @@
             <span class="copyright">&copy; 2026 AA Systems</span>
         </div>
     </footer>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        const CONTACT_FUNCTION_URL = 'https://contactform-xafbvuh4jq-uc.a.run.app';
+        const form = document.getElementById('contact-form');
+        const status = form.querySelector('.form-status');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            status.textContent = 'Sending…';
+
+            const turnstileToken = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
+            const payload = {
+                name: form.name.value.trim(),
+                email: form.email.value.trim(),
+                message: form.message.value.trim(),
+                website: form.website.value,
+                turnstileToken,
+            };
+
+            try {
+                const res = await fetch(CONTACT_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    form.reset();
+                    if (window.turnstile) window.turnstile.reset();
+                    status.textContent = "Thanks — I'll be in touch soon.";
+                    submitBtn.disabled = true;
+                } else {
+                    status.textContent = data.error || 'Something went wrong. Please email hello@aa-systems.ai directly.';
+                    if (window.turnstile) window.turnstile.reset();
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                status.textContent = 'Something went wrong. Please email hello@aa-systems.ai directly.';
+                if (window.turnstile) window.turnstile.reset();
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

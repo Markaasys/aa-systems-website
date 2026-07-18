@@ -1,0 +1,13 @@
+{
+  "name": "aa-systems-contact-form",
+  "version": "1.0.0",
+  "description": "Cloud Function handling the aa-systems.ai contact form: verifies Turnstile, sends email via Gmail API using domain-wide delegation.",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0",
+    "google-auth-library": "^9.14.0"
+  }
+}
