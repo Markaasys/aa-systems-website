@@ -47,6 +47,7 @@
             --ink-faint: #74808F;
             --body-gray: #535860;
             --border-light: rgba(22, 39, 63, 0.08);
+            --error: #A8442F;
         }
 
         [hidden] {
@@ -353,6 +354,22 @@
             border-color: var(--navy);
         }
 
+        .field.has-error input,
+        .field.has-error textarea {
+            border-color: var(--error);
+        }
+
+        .field-error {
+            display: none;
+            font-size: 13px;
+            color: var(--error);
+            margin-top: 6px;
+        }
+
+        .field.has-error .field-error {
+            display: block;
+        }
+
         .hp-field {
             position: absolute;
             left: -9999px;
@@ -518,17 +535,20 @@
                 <button type="button" id="contact-reveal" class="btn btn-fill">Start a conversation</button>
                 <div class="contact-form-wrap" id="contact-form-wrap" hidden>
                     <form class="contact-form" id="contact-form" novalidate>
-                        <div class="field">
+                        <div class="field" id="cf-name-field">
                             <label for="cf-name">Name</label>
                             <input type="text" id="cf-name" name="name" autocomplete="name" maxlength="200" required>
+                            <p class="field-error">Please enter your name.</p>
                         </div>
-                        <div class="field">
+                        <div class="field" id="cf-email-field">
                             <label for="cf-email">Email</label>
                             <input type="email" id="cf-email" name="email" autocomplete="email" maxlength="320" required>
+                            <p class="field-error">Please enter a valid email address.</p>
                         </div>
-                        <div class="field">
+                        <div class="field" id="cf-message-field">
                             <label for="cf-message">Message</label>
                             <textarea id="cf-message" name="message" rows="5" maxlength="5000" required></textarea>
+                            <p class="field-error">Please enter a message.</p>
                         </div>
                         <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <div class="cf-turnstile" data-sitekey="0x4AAAAAAD4O18-mLO-gnW-p"></div>
@@ -564,8 +584,38 @@
             form.querySelector('#cf-name').focus();
         });
 
+        const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const VALIDATORS = {
+            name: (v) => v.trim().length > 0,
+            email: (v) => EMAIL_RE.test(v.trim()),
+            message: (v) => v.trim().length > 0,
+        };
+
+        function setFieldError(fieldName, hasError) {
+            form.querySelector(`#cf-${fieldName}-field`).classList.toggle('has-error', hasError);
+        }
+
+        for (const fieldName of Object.keys(VALIDATORS)) {
+            form[fieldName].addEventListener('input', () => {
+                if (VALIDATORS[fieldName](form[fieldName].value)) setFieldError(fieldName, false);
+            });
+        }
+
+        function validateForm() {
+            let firstInvalid = null;
+            for (const fieldName of Object.keys(VALIDATORS)) {
+                const valid = VALIDATORS[fieldName](form[fieldName].value);
+                setFieldError(fieldName, !valid);
+                if (!valid && !firstInvalid) firstInvalid = form[fieldName];
+            }
+            if (firstInvalid) firstInvalid.focus();
+            return !firstInvalid;
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!validateForm()) return;
+
             submitBtn.disabled = true;
             status.textContent = 'Sending…';
 
