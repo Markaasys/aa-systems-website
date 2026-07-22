@@ -1,8 +1,8 @@
 const { GoogleAuth } = require('google-auth-library');
 
 const SERVICE_ACCOUNT_EMAIL = 'contact-form-sender@dubdubdub-502800.iam.gserviceaccount.com';
-const IMPERSONATED_USER = 'mark@aa-systems.ai';
-const SEND_AS = 'hello@aa-systems.ai';
+const IMPERSONATED_USER = 'os@aa-systems.ai';
+const SEND_AS = 'chuck@aa-systems.ai';
 const TO_ADDRESS = 'hello@aa-systems.ai';
 // localhost is allowed so the form can be tested against the live function during local dev.
 const ALLOWED_ORIGINS = new Set(['https://aa-systems.ai', 'http://localhost:3001']);
@@ -84,7 +84,7 @@ async function getDelegatedAccessToken() {
 
 function buildRawMessage({ name, email, message }) {
   const lines = [
-    `From: AA Systems <${SEND_AS}>`,
+    `From: Chuck <${SEND_AS}>`,
     `To: ${TO_ADDRESS}`,
     `Reply-To: ${email}`,
     `Subject: New inquiry from ${name} via aa-systems.ai`,
